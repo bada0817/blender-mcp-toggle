@@ -20,6 +20,9 @@ MCP 애드온의 코드는 전혀 수정하지 않습니다.
   - 원본 오퍼레이터를 그대로 호출하므로 환경설정(host/port 등), 타이머 등록, 에러 표시가 원본과 똑같이 동작합니다.
   - MCP 애드온이 꺼져 있으면 비활성화되고 "The MCP add-on is not enabled"가 표시됩니다.
 - **Ctrl+Alt+M 단축키 자동 등록** (Window 키맵이라 모든 에디터에서 동작)
+- **뷰포트 상태 표시** (2.0.0~)
+  - 서버가 실행 중일 때만 3D 뷰포트 구석에 `MCP server running · port 9876`처럼 실제로 열린 포트를 표시합니다.
+  - 기본 위치는 우하단이며, 환경설정에서 좌하단으로 바꾸거나 끌 수 있습니다.
 
 ## 요구 사항
 
@@ -58,6 +61,22 @@ blender -b --command extension install-file -r user_default -e mcp_toggle-<버�
 - 또는 F3 검색에서 *Toggle MCP Bridge Server*를 실행합니다.
 
 상태 표시줄에 `MCP bridge server started` / `MCP bridge server stopped`가 나타납니다.
+서버가 실행 중인 동안에는 3D 뷰포트 구석에 상태가 계속 표시됩니다.
+
+### 뷰포트 상태 표시
+
+**Preferences → Add-ons → MCP Toggle** 에서 설정합니다.
+
+- **Show Status in Viewport**: 표시 켜기/끄기
+- **Corner**: `Bottom Right`(기본) 또는 `Bottom Left`
+
+동작 방식:
+
+- 표시되는 포트는 서버 소켓이 실제로 열고 있는 포트입니다. MCP 애드온의 **Port** 설정을 바꾸고 서버를 다시 켜면 표시도 따라 바뀝니다.
+- 뷰포트의 **Overlays** 를 끄면 이 표시도 함께 숨겨집니다.
+- Region Overlap이 켜져 있으면 툴바(T)와 사이드바(N)를 피해서 그립니다. 사이드바를 열면 내비게이션 기즈모처럼 사이드바 왼쪽으로 비켜납니다.
+- 서버 상태는 뷰포트를 그릴 때만 읽고, 주기적으로 확인하는 타이머는 없습니다.
+  MCP 애드온 환경설정의 Start/Stop 버튼으로 바꾼 경우에는 뷰포트가 다시 그려질 때(예: 마우스를 뷰포트 위로 움직일 때) 표시가 갱신됩니다.
 
 ### 단축키 바꾸기
 
@@ -68,6 +87,8 @@ blender -b --command extension install-file -r user_default -e mcp_toggle-<버�
 
 MCP 애드온의 `mcp_to_blender_server.is_running()`(리스닝 소켓이 있는지 확인)으로 서버 상태를 판단합니다.
 애드온 패키지 이름은 설치된 저장소마다 다르기 때문에(예: `bl_ext.user_default.mcp`), 활성화된 애드온 중에서 `mcp_to_blender_server` 모듈을 찾아 사용합니다.
+
+뷰포트 표시는 `SpaceView3D.draw_handler_add`로 등록한 `POST_PIXEL` 콜백에서 `blf`로 그립니다.
 
 ## 주의
 

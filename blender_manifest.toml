@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "mcp_toggle"
-version = "1.0.0"
+version = "2.0.0"
 name = "MCP Toggle"
 tagline = "Toggles the Blender MCP server on/off with Ctrl+Alt+M"
 maintainer = "bada0"
