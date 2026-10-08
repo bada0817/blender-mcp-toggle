@@ -6,6 +6,7 @@ name = "MCP Toggle"
 tagline = "Single operator that starts or stops the MCP bridge server"
 maintainer = "bada0"
 type = "add-on"
+website = "https://github.com/bada0817/blender-mcp-toggle"
 blender_version_min = "5.1.0"
 
 license = [

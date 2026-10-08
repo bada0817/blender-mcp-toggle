@@ -31,7 +31,7 @@ MCP 애드온의 코드는 전혀 수정하지 않습니다.
 ### 방법 1: zip으로 빌드해서 설치
 
 ```bash
-git clone https://github.com/<user>/<repo>.git mcp_toggle
+git clone https://github.com/bada0817/blender-mcp-toggle.git mcp_toggle
 cd mcp_toggle
 blender -b --command extension build
 ```
