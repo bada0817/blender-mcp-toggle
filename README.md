@@ -1,37 +1,49 @@
 # MCP Toggle
 
-[Blender MCP 애드온](https://www.blender.org/lab/mcp-server/)의 브리지 서버를 **단축키 하나(Ctrl+Alt+M)로 켜고 끄는** 작은 Blender 확장입니다.
+**English** | [한국어](README.ko.md)
 
-A tiny Blender extension that toggles the Blender MCP add-on's bridge server with a single shortcut (Ctrl+Alt+M).
+[![Blender 5.1+](https://img.shields.io/badge/Blender-5.1%2B-E87D0D?logo=blender&logoColor=white)](https://www.blender.org/)
+[![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-blue)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/bada0817/blender-mcp-toggle)](https://github.com/bada0817/blender-mcp-toggle/releases/latest)
 
-## 왜 만들었나
+A small Blender extension that **starts and stops the bridge server of the [Blender MCP add-on](https://www.blender.org/lab/mcp-server/) with a single shortcut (Ctrl+Alt+M)**.
+While the server is running, its status is shown in a corner of the 3D viewport.
 
-MCP 애드온에는 `blmcp.server_start`와 `blmcp.server_stop` 두 오퍼레이터만 있고, 둘 다 `poll`이 없습니다.
-그래서 두 오퍼레이터를 같은 단축키에 각각 지정해도 상태에 따라 하나만 골라 실행되지 않습니다.
-이미 실행 중일 때 start가 호출되면 `Server is already running` 에러가 납니다.
+![Status in the bottom-right corner of the viewport](docs/screenshot.png)
 
-이 확장은 서버 상태를 확인한 뒤 알맞은 오퍼레이터를 대신 호출하는 토글 오퍼레이터를 제공합니다.
-MCP 애드온의 코드는 전혀 수정하지 않습니다.
+## Why
 
-## 기능
+The MCP add-on only provides two operators, `blmcp.server_start` and `blmcp.server_stop`, and neither has a `poll`.
+Binding both to the same key doesn't pick the right one based on the server state,
+and calling start while the server is already running fails with `Server is already running`.
 
-- **`blmcp_toggle.toggle`** 오퍼레이터 (이름: *Toggle MCP Bridge Server*)
-  - 서버가 실행 중이면 `blmcp.server_stop`, 멈춰 있으면 `blmcp.server_start`를 호출합니다.
-  - 원본 오퍼레이터를 그대로 호출하므로 환경설정(host/port 등), 타이머 등록, 에러 표시가 원본과 똑같이 동작합니다.
-  - MCP 애드온이 꺼져 있으면 비활성화되고 "The MCP add-on is not enabled"가 표시됩니다.
-- **Ctrl+Alt+M 단축키 자동 등록** (Window 키맵이라 모든 에디터에서 동작)
-- **뷰포트 상태 표시** (2.0.0~)
-  - 서버가 실행 중일 때만 3D 뷰포트 구석에 `MCP server running · port 9876`처럼 실제로 열린 포트를 표시합니다.
-  - 기본 위치는 우하단이며, 환경설정에서 좌하단으로 바꾸거나 끌 수 있습니다.
+This extension adds a toggle operator that checks the server state and calls the matching operator.
+The MCP add-on's code is not modified.
 
-## 요구 사항
+## Features
 
-- Blender 5.1 이상
-- [MCP 애드온](https://www.blender.org/lab/mcp-server/) 설치 및 활성화
+- **`blmcp_toggle.toggle`** operator (label: *Toggle MCP Bridge Server*)
+  - Calls `blmcp.server_stop` when the server is running, `blmcp.server_start` when it's stopped.
+  - Since the original operators are called, preferences (host, port, etc.), timer registration and error reporting behave exactly as in the MCP add-on.
+  - Disabled with the message "The MCP add-on is not enabled" when the MCP add-on is off.
+- **Ctrl+Alt+M shortcut registered automatically** (in the Window keymap, so it works in every editor)
+- **Viewport status** (since 2.0.0)
+  - Only while the server is running, shows the actual listening port in a corner of the 3D viewport, e.g. `MCP server running · port 9876`.
+  - Bottom-right by default. Can be moved to the bottom-left or turned off in the preferences.
 
-## 설치
+## Requirements
 
-### 방법 1: zip으로 빌드해서 설치
+- Blender 5.1 or newer
+- The [MCP add-on](https://www.blender.org/lab/mcp-server/) installed and enabled
+
+## Installation
+
+### Option 1: Install the release zip (recommended)
+
+Download `mcp_toggle-<version>.zip` from [Releases](https://github.com/bada0817/blender-mcp-toggle/releases/latest),
+then in Blender choose it from **Edit → Preferences → Get Extensions → ⌄ (top right) → Install from Disk...**.
+
+### Option 2: Build it yourself
 
 ```bash
 git clone https://github.com/bada0817/blender-mcp-toggle.git mcp_toggle
@@ -39,61 +51,60 @@ cd mcp_toggle
 blender -b --command extension build
 ```
 
-Blender에서 **Edit → Preferences → Get Extensions → 오른쪽 위 ⌄ → Install from Disk...** 로 생성된 `mcp_toggle-<버전>.zip`을 선택합니다.
-
-명령줄로 설치할 수도 있습니다.
+Install the generated `mcp_toggle-<version>.zip` with **Install from Disk...** as above, or from the command line:
 
 ```bash
-blender -b --command extension install-file -r user_default -e mcp_toggle-<버전>.zip
+blender -b --command extension install-file -r user_default -e mcp_toggle-<version>.zip
 ```
 
-### 방법 2: 로컬 저장소로 연결 (개발용)
+### Option 3: Link as a local repository (for development)
 
-코드를 고치면 Blender를 다시 시작하거나 애드온을 껐다 켜는 것만으로 반영됩니다.
+Code changes take effect after restarting Blender or toggling the add-on off and on.
 
-1. 이 저장소를 클론한 **상위 폴더**를 준비합니다 (예: `~/blender_addons/mcp_toggle`이면 `~/blender_addons`).
-2. **Edit → Preferences → Get Extensions → ⌄ → Repositories → `+` → Add Local Repository** 에서 그 상위 폴더를 지정합니다.
-3. **Add-ons** 탭에서 *MCP Toggle*을 켭니다.
+1. Use the **parent folder** of the clone (e.g. `~/blender_addons` for `~/blender_addons/mcp_toggle`).
+2. Add it in **Edit → Preferences → Get Extensions → ⌄ → Repositories → `+` → Add Local Repository**.
+3. Enable *MCP Toggle* in the **Add-ons** tab.
 
-## 사용법
+## Usage
 
-- **Ctrl+Alt+M** 을 누릅니다.
-- 또는 F3 검색에서 *Toggle MCP Bridge Server*를 실행합니다.
+- Press **Ctrl+Alt+M**.
+- Or run *Toggle MCP Bridge Server* from the F3 search.
 
-상태 표시줄에 `MCP bridge server started` / `MCP bridge server stopped`가 나타납니다.
-서버가 실행 중인 동안에는 3D 뷰포트 구석에 상태가 계속 표시됩니다.
+The status bar shows `MCP bridge server started` / `MCP bridge server stopped`,
+and while the server is running its status stays visible in a corner of the 3D viewport.
 
-### 뷰포트 상태 표시
+### Viewport status
 
-**Preferences → Add-ons → MCP Toggle** 에서 설정합니다.
+Configure it in **Preferences → Add-ons → MCP Toggle**:
 
-- **Show Status in Viewport**: 표시 켜기/끄기
-- **Corner**: `Bottom Right`(기본) 또는 `Bottom Left`
+- **Show Status in Viewport**: turn the status on or off
+- **Corner**: `Bottom Right` (default) or `Bottom Left`
 
-동작 방식:
+Behavior:
 
-- 표시되는 포트는 서버 소켓이 실제로 열고 있는 포트입니다. MCP 애드온의 **Port** 설정을 바꾸고 서버를 다시 켜면 표시도 따라 바뀝니다.
-- 뷰포트의 **Overlays** 를 끄면 이 표시도 함께 숨겨집니다.
-- Region Overlap이 켜져 있으면 툴바(T)와 사이드바(N)를 피해서 그립니다. 사이드바를 열면 내비게이션 기즈모처럼 사이드바 왼쪽으로 비켜납니다.
-- 서버 상태는 뷰포트를 그릴 때만 읽고, 주기적으로 확인하는 타이머는 없습니다.
-  MCP 애드온 환경설정의 Start/Stop 버튼으로 바꾼 경우에는 뷰포트가 다시 그려질 때(예: 마우스를 뷰포트 위로 움직일 때) 표시가 갱신됩니다.
+- The port shown is the one the server socket is actually listening on. After changing **Port** in the MCP add-on's preferences and restarting the server, the status follows.
+- Turning off the viewport **Overlays** hides it as well.
+- With Region Overlap enabled, it stays clear of the toolbar (T) and the sidebar (N). When the sidebar is open it moves left of it, like the navigation gizmo.
+- The server state is only read while the viewport draws, there is no polling timer.
+  When the server is started or stopped with the buttons in the MCP add-on's preferences, the status updates on the next viewport redraw (e.g. when moving the mouse over the viewport).
 
-### 단축키 바꾸기
+### Changing the shortcut
 
-**Preferences → Keymap** 에서 `blmcp_toggle.toggle`을 검색해 바꾸거나 끌 수 있습니다.
-예전에 start/stop을 같은 키에 직접 지정했다면 충돌하지 않도록 그 항목들은 지워 주세요.
+Search for `blmcp_toggle.toggle` in **Preferences → Keymap** to change or disable it.
+If you previously bound start/stop to the same key yourself, remove those entries to avoid conflicts.
 
-## 동작 원리
+## How it works
 
-MCP 애드온의 `mcp_to_blender_server.is_running()`(리스닝 소켓이 있는지 확인)으로 서버 상태를 판단합니다.
-애드온 패키지 이름은 설치된 저장소마다 다르기 때문에(예: `bl_ext.user_default.mcp`), 활성화된 애드온 중에서 `mcp_to_blender_server` 모듈을 찾아 사용합니다.
+The server state comes from the MCP add-on's `mcp_to_blender_server.is_running()` (whether the listening socket exists).
+The add-on's package name depends on the repository it's installed in (e.g. `bl_ext.user_default.mcp`),
+so the `mcp_to_blender_server` module is looked up among the enabled add-ons.
 
-뷰포트 표시는 `SpaceView3D.draw_handler_add`로 등록한 `POST_PIXEL` 콜백에서 `blf`로 그립니다.
+The viewport status is drawn with `blf` from a `POST_PIXEL` callback registered with `SpaceView3D.draw_handler_add`.
 
-## 주의
+## Note
 
-Claude Code 같은 MCP 클라이언트가 이 서버로 Blender에 연결돼 있다면, 서버를 멈추는 순간 그 연결도 끊어집니다.
+If an MCP client such as Claude Code is connected to Blender through this server, stopping the server also drops that connection.
 
-## 라이선스
+## License
 
-[GPL-3.0-or-later](LICENSE). Blender 애드온 라이선스 요건과 MCP 애드온의 라이선스를 따릅니다.
+[GPL-3.0-or-later](LICENSE), following Blender's add-on license requirements and the MCP add-on's license.

@@ -14,3 +14,13 @@ license = [
 ]
 
 tags = ["Development"]
+
+[build]
+# The defaults plus repository-only files that aren't needed inside Blender.
+paths_exclude_pattern = [
+  "__pycache__/",
+  "/.git/",
+  "/*.zip",
+  "/.gitignore",
+  "/docs/",
+]
