@@ -145,12 +145,15 @@ class _MCPTogglePreferences(bpy.types.AddonPreferences):  # type: ignore[misc]
     )
 
     def draw(self, context: bpy.types.Context) -> None:
-        del context
         layout = self.layout
         layout.prop(self, "show_overlay")
         row = layout.row()
         row.active = self.show_overlay
         row.prop(self, "overlay_corner")
+
+        layout.separator()
+        layout.label(text="Shortcut:")
+        _keymap_draw(context, layout.column())
 
 
 def _overlay_draw() -> None:
@@ -240,6 +243,25 @@ def _keymap_register() -> None:
     km = kc.keymaps.new(name="Window", space_type="EMPTY")
     kmi = km.keymap_items.new(BLMCP_TOGGLE_OT_toggle.bl_idname, "M", "PRESS", ctrl=True, alt=True)
     _keymap_items.append((km, kmi))
+
+
+def _keymap_draw(context: bpy.types.Context, layout: bpy.types.UILayout) -> None:
+    """
+    Draw the shortcut editor, the same as in the "Keymap" preferences.
+    """
+    import rna_keymap_ui  # pylint: disable=import-error
+
+    # Edit the user key configuration, so changes are stored in the preferences
+    # and kept when the add-on is re-enabled.
+    kc = context.window_manager.keyconfigs.user
+    km = kc.keymaps.get("Window")
+    kmi = None
+    if km is not None:
+        kmi = next((item for item in km.keymap_items if item.idname == BLMCP_TOGGLE_OT_toggle.bl_idname), None)
+    if kmi is None:
+        layout.label(text="Shortcut not found, re-enable the add-on to restore it", icon="ERROR")
+        return
+    rna_keymap_ui.draw_kmi([], kc, km, kmi, layout, 0)
 
 
 def _keymap_unregister() -> None:

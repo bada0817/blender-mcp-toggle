@@ -27,6 +27,7 @@ The MCP add-on's code is not modified.
   - Since the original operators are called, preferences (host, port, etc.), timer registration and error reporting behave exactly as in the MCP add-on.
   - Disabled with the message "The MCP add-on is not enabled" when the MCP add-on is off.
 - **Ctrl+Alt+M shortcut registered automatically** (in the Window keymap, so it works in every editor)
+  - Can be changed right in the add-on's preferences.
 - **Viewport status** (since 2.0.0)
   - Only while the server is running, shows the actual listening port in a corner of the 3D viewport, e.g. `MCP server running · port 9876`.
   - Bottom-right by default. Can be moved to the bottom-left or turned off in the preferences.
@@ -73,9 +74,15 @@ Code changes take effect after restarting Blender or toggling the add-on off and
 The status bar shows `MCP bridge server started` / `MCP bridge server stopped`,
 and while the server is running its status stays visible in a corner of the 3D viewport.
 
+### Preferences
+
+Expand **Preferences → Add-ons → MCP Toggle**:
+
+![Add-on preferences](docs/preferences.png)
+
 ### Viewport status
 
-Configure it in **Preferences → Add-ons → MCP Toggle**:
+Configure it in the add-on's preferences:
 
 - **Show Status in Viewport**: turn the status on or off
 - **Corner**: `Bottom Right` (default) or `Bottom Left`
@@ -90,7 +97,13 @@ Behavior:
 
 ### Changing the shortcut
 
-Search for `blmcp_toggle.toggle` in **Preferences → Keymap** to change or disable it.
+Under **Shortcut** in the add-on's preferences, click the key field (`Ctrl Alt M`) and press the new key combination.
+The checkbox turns the shortcut off, and the arrow expands more options (e.g. Press/Release, key repeat).
+
+This is the same item as in **Preferences → Keymap** (search for *Toggle MCP Bridge Server*), so either place works.
+Changes are saved with the preferences (use **Save Preferences** if Auto-Save is off)
+and kept when the add-on is updated or re-enabled. **Restore** in the Keymap preferences resets it to Ctrl+Alt+M.
+
 If you previously bound start/stop to the same key yourself, remove those entries to avoid conflicts.
 
 ## How it works

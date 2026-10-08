@@ -27,6 +27,7 @@ MCP 애드온의 코드는 전혀 수정하지 않습니다.
   - 원본 오퍼레이터를 그대로 호출하므로 환경설정(host/port 등), 타이머 등록, 에러 표시가 원본과 똑같이 동작합니다.
   - MCP 애드온이 꺼져 있으면 비활성화되고 "The MCP add-on is not enabled"가 표시됩니다.
 - **Ctrl+Alt+M 단축키 자동 등록** (Window 키맵이라 모든 에디터에서 동작)
+  - 애드온 환경설정에서 바로 바꿀 수 있습니다.
 - **뷰포트 상태 표시** (2.0.0~)
   - 서버가 실행 중일 때만 3D 뷰포트 구석에 `MCP server running · port 9876`처럼 실제로 열린 포트를 표시합니다.
   - 기본 위치는 우하단이며, 환경설정에서 좌하단으로 바꾸거나 끌 수 있습니다.
@@ -75,9 +76,15 @@ blender -b --command extension install-file -r user_default -e mcp_toggle-<버�
 상태 표시줄에 `MCP bridge server started` / `MCP bridge server stopped`가 나타납니다.
 서버가 실행 중인 동안에는 3D 뷰포트 구석에 상태가 계속 표시됩니다.
 
+### 환경설정
+
+**Preferences → Add-ons → MCP Toggle** 을 펼칩니다.
+
+![애드온 환경설정](docs/preferences.png)
+
 ### 뷰포트 상태 표시
 
-**Preferences → Add-ons → MCP Toggle** 에서 설정합니다.
+애드온 환경설정에서 설정합니다.
 
 - **Show Status in Viewport**: 표시 켜기/끄기
 - **Corner**: `Bottom Right`(기본) 또는 `Bottom Left`
@@ -92,7 +99,13 @@ blender -b --command extension install-file -r user_default -e mcp_toggle-<버�
 
 ### 단축키 바꾸기
 
-**Preferences → Keymap** 에서 `blmcp_toggle.toggle`을 검색해 바꾸거나 끌 수 있습니다.
+애드온 환경설정의 **Shortcut** 에서 키 칸(`Ctrl Alt M`)을 누르고 새 키 조합을 누르면 바뀝니다.
+체크박스로 단축키를 끌 수 있고, 왼쪽 화살표를 펼치면 Press/Release, 키 반복 같은 세부 옵션이 나옵니다.
+
+**Preferences → Keymap** 의 항목(*Toggle MCP Bridge Server* 로 검색)과 같은 항목이라 어느 쪽에서 바꿔도 됩니다.
+바꾼 키는 환경설정에 저장되며(Auto-Save가 꺼져 있다면 **Save Preferences**), 애드온을 업데이트하거나 껐다 켜도 유지됩니다.
+Keymap 화면의 **Restore** 를 누르면 Ctrl+Alt+M으로 돌아갑니다.
+
 예전에 start/stop을 같은 키에 직접 지정했다면 충돌하지 않도록 그 항목들은 지워 주세요.
 
 ## 동작 원리
